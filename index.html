@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reputation Audit — Weller Recreation | HeroHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* HeroHub teal — primary brand color used in logo, CTAs, accents */
+  --teal:      #00b8a0;
+  --teal-d:    #008f7c;
+  --teal-l:    #e6f9f6;
+  --teal-mid:  #b3ece5;
+  --teal-bg:   #f0faf8;
+
+  /* HeroHub navy — used in headings, dark sections */
+  --navy:      #0d1b2e;
+  --navy-mid:  #1a2f4a;
+
+  /* Page foundation — very light, warm-white */
+  --bg:        #f5f7f9;
+  --bg-alt:    #eef1f4;
+  --surface:   #ffffff;
+  --surface2:  #f8fafb;
+
+  /* Borders */
+  --border:    rgba(13,27,46,0.08);
+  --border2:   rgba(13,27,46,0.14);
+  --border-teal: rgba(0,184,160,0.2);
+
+  /* Text */
+  --text1:     #0d1b2e;
+  --text2:     #4a5568;
+  --text3:     #8a96a6;
+
+  /* Status */
+  --red:       #e53e52;
+  --red-bg:    #fff0f2;
+  --red-b:     #fecdd3;
+  --amber:     #d97706;
+  --amber-bg:  #fffbeb;
+  --amber-b:   #fde68a;
+  --green:     #059669;
+  --green-bg:  #ecfdf5;
+  --green-b:   #a7f3d0;
+  --sky:       #0284c7;
+  --sky-bg:    #f0f9ff;
+  --sky-b:     #bae6fd;
+
+  --r-sm: 5px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px;
+  --shadow-sm: 0 1px 3px rgba(13,27,46,0.07), 0 1px 2px rgba(13,27,46,0.04);
+  --shadow-md: 0 4px 16px rgba(13,27,46,0.09), 0 1px 4px rgba(13,27,46,0.05);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text1);
+  font-size: 13px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── TOPBAR ─────────────────────────────────────────────── */
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px; position: sticky; top: 0; z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+.logo-wrap { display: flex; align-items: center; gap: 10px; }
+/* The real HeroHub teal logo — loads from their CDN; SVG fallback below */
+.hh-logo-img { height: 26px; width: auto; display: block; }
+.topbar-right {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 11px; color: var(--text3);
+}
+.conf-pill {
+  padding: 3px 10px; border-radius: 4px; font-size: 10px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+  background: var(--bg-alt); color: var(--text3);
+  border: 1px solid var(--border2);
+}
+
+/* ── HERO HEADER ─────────────────────────────────────────── */
+.page-hero {
+  background: var(--navy);
+  position: relative; overflow: hidden;
+  border-bottom: 3px solid var(--teal);
+}
+
+/* HeroHub dot-grid texture — signature pattern from their site */
+.hero-dots {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+/* Diagonal line overlay — matches HeroHub geometric style */
+.hero-lines {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+
+.hero-inner {
+  max-width: 1160px; margin: 0 auto;
+  padding: 3rem 2rem 0; position: relative; z-index: 1;
+}
+.hero-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem;
+}
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 10px; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--teal); margin-bottom: 12px;
+}
+.hero-eyebrow-line { width: 20px; height: 2px; background: var(--teal); border-radius: 1px; flex-shrink: 0; }
+.hero-title {
+  font-size: 38px; font-weight: 700; letter-spacing: -.03em;
+  color: #ffffff; line-height: 1.05;
+}
+.hero-sub { font-size: 13px; color: rgba(255,255,255,0.45); margin-top: 8px; letter-spacing: -.01em; }
+.hero-badges { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 6px; }
+.hbadge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700; padding: 5px 13px;
+  border-radius: var(--r-sm); letter-spacing: .05em; text-transform: uppercase;
+}
+.hb-elite { background: rgba(0,184,160,0.18); color: var(--teal); border: 1px solid rgba(0,184,160,0.35); }
+.hb-risk  { background: rgba(229,62,82,0.18); color: #fc8095; border: 1px solid rgba(229,62,82,0.3); }
+
+/* ── METRIC STRIP ─────────────────────────────────────────── */
+.metrics-strip {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.25);
+}
+.metric-item { padding: 1.375rem 1.5rem; border-right: 1px solid rgba(255,255,255,0.08); }
+.metric-item:last-child { border-right: none; }
+.metric-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.38); margin-bottom: 6px;
+}
+.metric-value { font-size: 34px; font-weight: 700; letter-spacing: -.03em; line-height: 1; color: #fff; }
+.metric-value.teal { color: var(--teal); }
+.metric-sub { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 5px; }
+
+/* ── BODY ───────────────────────────────────────────────────  */
+.body { max-width: 1160px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+
+/* ── SUMMARY ─────────────────────────────────────────────── */
+.summary-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 4px solid var(--teal);
+  border-radius: var(--r-lg); padding: 1.5rem 1.75rem;
+  margin-bottom: 1.75rem; box-shadow: var(--shadow-sm);
+  display: flex; gap: 1.5rem; align-items: flex-start;
+}
+.summary-icon {
+  width: 46px; height: 46px; border-radius: 12px;
+  background: var(--teal-l); border: 1px solid var(--teal-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0; margin-top: 2px;
+}
+.summary-headline { font-size: 14px; font-weight: 700; color: var(--text1); margin-bottom: 8px; }
+.summary-text { font-size: 13px; color: var(--text2); line-height: 1.8; }
+.hl     { color: var(--teal-d); font-weight: 600; }
+.hl-red { color: var(--red); font-weight: 600; }
+
+/* ── SECTION DIVIDER ─────────────────────────────────────── */
+.section-divider {
+  font-size: 10px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--text3);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;
+}
+.section-divider::after { content:''; flex:1; height:1px; background:var(--border2); }
+
+/* ── GRID ────────────────────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+.col-stack { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* ── CARD ────────────────────────────────────────────────── */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 1.375rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+.card-title {
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text3);
+  margin-bottom: 1.125rem; display: flex; align-items: center; gap: 8px;
+}
+.title-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── RISK ────────────────────────────────────────────────── */
+.risk-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.risk-item:last-child { border-bottom: none; padding-bottom: 0; }
+.risk-item:first-child { padding-top: 0; }
+.risk-indicator { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; padding-top: 3px; }
+.risk-pip { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.risk-pip.red   { background: var(--red);   box-shadow: 0 0 0 4px var(--red-bg); }
+.risk-pip.amber { background: var(--amber); box-shadow: 0 0 0 4px var(--amber-bg); }
+.risk-pip.gray  { background: var(--text3); box-shadow: 0 0 0 4px var(--bg-alt); }
+.risk-line { width: 1px; flex: 1; background: var(--border2); }
+.risk-tag {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  padding: 2px 8px; border-radius: var(--r-sm); margin-bottom: 5px;
+  text-transform: uppercase; letter-spacing: .06em;
+}
+.tag-critical { background: var(--red-bg);   color: var(--red);   border: 1px solid var(--red-b); }
+.tag-high     { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-b); }
+.tag-minor    { background: var(--bg-alt);   color: var(--text3); border: 1px solid var(--border2); }
+.risk-title { font-size: 13px; font-weight: 600; color: var(--text1); margin-bottom: 4px; }
+.risk-desc  { font-size: 12px; color: var(--text2); line-height: 1.65; }
+
+/* ── DEPT BARS ───────────────────────────────────────────── */
+.dept-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.dept-row:last-child { border-bottom: none; }
+.dept-name { font-size: 12px; font-weight: 600; width: 92px; flex-shrink: 0; color: var(--text1); }
+.dept-name.danger { color: var(--red); }
+.dept-bar-bg { flex: 1; height: 7px; background: var(--bg-alt); border-radius: 4px; overflow: hidden; }
+.dept-bar-fill { height: 100%; border-radius: 4px; }
+.dept-stars { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text2); width: 30px; text-align: right; flex-shrink: 0; }
+.dept-stars.danger { color: var(--red); font-weight: 600; }
+.neg-badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: var(--r-sm); }
+.neg-ok  { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-b); }
+.neg-mid { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-b); }
+.neg-bad { background: var(--red-bg);   color: var(--red);   border: 1px solid var(--red-b); }
+
+/* ── EMPLOYEES ───────────────────────────────────────────── */
+.emp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.emp-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; background: var(--surface2);
+  border-radius: var(--r-md); border: 1px solid var(--border);
+  transition: border-color .15s, box-shadow .15s;
+}
+.emp-row:hover { border-color: var(--teal-mid); box-shadow: 0 2px 8px rgba(0,184,160,0.08); }
+.emp-avatar {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0;
+}
+.av-elite    { background: var(--teal-l); color: var(--teal-d); border: 1px solid var(--teal-mid); }
+.av-high     { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-b); }
+.av-reliable { background: var(--bg-alt); color: var(--text3); border: 1px solid var(--border2); }
+.emp-name { font-size: 12px; font-weight: 600; color: var(--text1); line-height: 1.3; }
+.emp-meta { font-size: 10px; color: var(--text3); }
+.emp-tier {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  padding: 1px 6px; border-radius: 3px; margin-top: 3px;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.tier-elite    { background: var(--teal-l); color: var(--teal-d); }
+.tier-high     { background: var(--green-bg); color: var(--green); }
+.tier-reliable { background: var(--bg-alt); color: var(--text3); }
+.emp-count { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 600; color: var(--text1); margin-left: auto; flex-shrink: 0; }
+
+/* ── CHIPS ───────────────────────────────────────────────── */
+.chip-wrap { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1rem; }
+.chip {
+  display: inline-block; font-size: 11px; font-weight: 500;
+  padding: 5px 13px; border-radius: 20px;
+  background: var(--teal-l); color: var(--teal-d);
+  border: 1px solid var(--teal-mid);
+}
+
+/* ── SENTIMENT ───────────────────────────────────────────── */
+.sentiment-section { border-top: 1px solid var(--border); padding-top: 1rem; }
+.sentiment-label { font-size: 10px; color: var(--text3); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: .08em; }
+.sentiment-track { height: 13px; background: var(--red-bg); border-radius: 20px; overflow: hidden; display: flex; margin-bottom: 8px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06); }
+.sentiment-pos { background: linear-gradient(90deg, var(--teal-d), var(--teal)); height: 100%; border-radius: 20px; }
+.sentiment-legend { display: flex; gap: 16px; flex-wrap: wrap; }
+.sl { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text2); }
+.sl-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+/* ── BRAND SIGNAL ────────────────────────────────────────── */
+.brand-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.brand-row:last-child { border-bottom: none; }
+.brand-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.brand-name-col { font-size: 12px; font-weight: 600; width: 68px; flex-shrink: 0; color: var(--text1); }
+.brand-mentions { font-size: 11px; color: var(--text3); width: 70px; flex-shrink: 0; }
+.brand-stars-col { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; width: 38px; text-align: right; flex-shrink: 0; }
+.brand-read { font-size: 11px; color: var(--text2); flex: 1; }
+
+/* ── ACTIONS ─────────────────────────────────────────────── */
+.action-item { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+.action-item:last-child { border-bottom: none; padding-bottom: 0; }
+.action-item:first-child { padding-top: 0; }
+.action-num {
+  width: 22px; height: 22px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+.num-red   { background: var(--red-bg);   color: var(--red);   border: 1px solid var(--red-b); }
+.num-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-b); }
+.num-teal  { background: var(--teal-l);   color: var(--teal-d); border: 1px solid var(--teal-mid); }
+.action-text  { font-size: 12.5px; color: var(--text1); font-weight: 500; line-height: 1.55; }
+.action-owner { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* ── CHARTS ──────────────────────────────────────────────── */
+.chart-wrap { position: relative; width: 100%; height: 210px; min-height: 180px; }
+@media (max-width: 720px) { .chart-wrap { height: 220px; } }
+
+/* ── FULL REPORT ─────────────────────────────────────────── */
+.report-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--r-lg); padding: 1.125rem 1.375rem;
+  cursor: pointer; text-align: left; box-shadow: var(--shadow-sm);
+  transition: border-color .2s, box-shadow .2s; font-family: 'Inter', sans-serif;
+}
+.report-toggle:hover { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,184,160,0.1); }
+.report-toggle[aria-expanded="true"] { border-color: var(--teal); border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: none; }
+.report-toggle-left { display: flex; align-items: center; gap: 12px; }
+.report-toggle-icon { font-size: 20px; }
+.report-toggle-title { display: block; font-size: 14px; font-weight: 600; color: var(--text1); }
+.report-toggle-sub { display: block; font-size: 11px; color: var(--text3); margin-top: 2px; }
+.report-toggle-chevron { color: var(--text3); transition: transform .25s; flex-shrink: 0; }
+.report-toggle[aria-expanded="true"] .report-toggle-chevron { transform: rotate(180deg); color: var(--teal-d); }
+
+.report-body {
+  background: var(--surface); border: 1px solid var(--teal);
+  border-top: none; border-bottom-left-radius: var(--r-lg); border-bottom-right-radius: var(--r-lg);
+  padding: 0 1.75rem 1.75rem; box-shadow: var(--shadow-sm);
+  animation: reportOpen .2s ease;
+}
+@keyframes reportOpen { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+
+.report-section { padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
+.report-section:first-child { padding-top: 1.75rem; }
+.report-section-title {
+  font-size: 13px; font-weight: 700; color: var(--text1);
+  margin-bottom: 0.875rem; padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--teal-l);
+}
+.report-subsection-title { font-size: 12px; font-weight: 700; color: var(--teal-d); margin-bottom: 0.5rem; margin-top: 0.75rem; }
+.report-body p { font-size: 13px; color: var(--text2); line-height: 1.75; margin-bottom: 0.625rem; }
+.report-body p:last-child { margin-bottom: 0; }
+.report-list { padding-left: 1.25rem; margin: 0.5rem 0; }
+.report-list li { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 3px; }
+.report-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 0.5rem; }
+.report-table thead tr { background: var(--bg-alt); }
+.report-table th { text-align: left; padding: 8px 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); border-bottom: 1px solid var(--border2); white-space: nowrap; }
+.report-table td { padding: 9px 12px; color: var(--text2); border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.55; }
+.report-table tbody tr:last-child td { border-bottom: none; }
+.report-table tbody tr:hover td { background: var(--teal-bg); }
+.report-bottom-box { border-radius: var(--r-md); padding: 1.25rem 1.5rem; background: var(--teal-bg); border: 1px solid var(--border-teal); }
+.report-bottom-box .report-section-title { color: var(--teal-d); border-bottom-color: var(--teal-mid); }
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+.footer {
+  background: var(--navy);
+  border-top: 3px solid var(--teal);
+  padding: 1.5rem 2rem;
+}
+.footer-inner {
+  max-width: 1160px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+}
+.footer-logo { opacity: 0.7; }
+.footer-logo-img { height: 20px; width: auto; }
+.footer-left  { font-size: 11px; color: rgba(255,255,255,0.35); }
+.footer-right { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.35); }
+
+@media (max-width: 720px) {
+  .metrics-strip { grid-template-columns: 1fr 1fr; }
+  .metric-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .grid-2 { grid-template-columns: 1fr; }
+  .emp-grid { grid-template-columns: 1fr; }
+  .body { padding: 1.25rem; }
+  .hero-title { font-size: 26px; }
+  .topbar { padding: 0 1.25rem; }
+  .hero-inner { padding: 2rem 1.25rem 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ────────────────────────────────────────────── -->
+<nav class="topbar">
+  <div class="logo-wrap">
+    <!-- Real HeroHub teal logo from their CDN — falls back to inline SVG wordmark -->
+    <img class="hh-logo-img"
+         src="https://cdn.prod.website-files.com/68238b5d1d8b582ad3c13bea/684c2fce2658b5354c86fdbb_f4f0c66a294a55c2274a9a418ae8dbcf_Teal.svg"
+         alt="HeroHub"
+         onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+    <!-- Fallback: inline SVG wordmark in HeroHub teal -->
+    <svg id="logo-fallback" style="display:none;height:26px;width:auto" viewBox="0 0 200 36" xmlns="http://www.w3.org/2000/svg" aria-label="HeroHub">
+      <text x="0" y="27" font-family="'Inter',sans-serif" font-weight="800" font-size="26" letter-spacing="-1" fill="#00b8a0">HEROHUB</text>
+      <text x="188" y="13" font-family="'Inter',sans-serif" font-weight="400" font-size="10" fill="#00b8a0">®</text>
+    </svg>
+  </div>
+  <div class="topbar-right">
+    <span>Reputation Intelligence</span>
+    <span class="conf-pill">Confidential</span>
+  </div>
+</nav>
+
+<!-- ── HERO HEADER ────────────────────────────────────────── -->
+<div class="page-hero">
+  <div class="hero-dots"></div>
+
+  <!-- SVG diagonal lines + accent circles — HeroHub geometric motif -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden"
+       viewBox="0 0 1400 340" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- diagonals -->
+    <line x1="-80" y1="340" x2="320" y2="-60"  stroke="rgba(0,184,160,0.07)" stroke-width="1.5"/>
+    <line x1="120" y1="340" x2="520" y2="-60"  stroke="rgba(0,184,160,0.05)" stroke-width="1"/>
+    <line x1="320" y1="340" x2="720" y2="-60"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+    <line x1="520" y1="340" x2="920" y2="-60"  stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+    <line x1="720" y1="340" x2="1120" y2="-60" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+    <line x1="920" y1="340" x2="1320" y2="-60" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+    <!-- large circles -->
+    <circle cx="1180" cy="30"  r="270" stroke="rgba(0,184,160,0.07)" stroke-width="65" fill="none"/>
+    <circle cx="1310" cy="300" r="150" stroke="rgba(255,255,255,0.03)" stroke-width="40" fill="none"/>
+    <circle cx="-30"  cy="310" r="190" stroke="rgba(255,255,255,0.025)" stroke-width="48" fill="none"/>
+    <!-- teal accent dots -->
+    <circle cx="430" cy="275" r="3"   fill="rgba(0,184,160,0.5)"/>
+    <circle cx="820" cy="42"  r="2.5" fill="rgba(0,184,160,0.4)"/>
+    <circle cx="655" cy="305" r="2"   fill="rgba(255,255,255,0.12)"/>
+    <circle cx="1060" cy="185" r="2"  fill="rgba(0,184,160,0.3)"/>
+  </svg>
+
+  <div class="hero-inner">
+    <div class="hero-top">
+      <div>
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-line"></span>
+          Reputation Audit · Jan 2024 – Dec 2025
+        </div>
+        <div class="hero-title">Weller Recreation</div>
+        <div class="hero-sub">Kamas, Utah &nbsp;·&nbsp; Google Reviews Analysis</div>
+      </div>
+      <div class="hero-badges">
+        <span class="hbadge hb-elite">⬆ Elite Profile</span>
+        <span class="hbadge hb-risk">⚠ Service Risk</span>
+      </div>
+    </div>
+    <div class="metrics-strip">
+      <div class="metric-item">
+        <div class="metric-label">Avg Star Rating</div>
+        <div class="metric-value teal">4.89 ★</div>
+        <div class="metric-sub">4.84 in 2024 → 4.93 in 2025</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-label">Total Reviews</div>
+        <div class="metric-value">257</div>
+        <div class="metric-sub">85 in 2024 · 150 in 2025</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-label">5-Star Share</div>
+        <div class="metric-value teal">95.7%</div>
+        <div class="metric-sub">246 of 257 reviews</div>
+      </div>
+      <div class="metric-item">
+        <div class="metric-label">Owner Response Rate</div>
+        <div class="metric-value teal">99.6%</div>
+        <div class="metric-sub">256 of 257 responded</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── BODY ───────────────────────────────────────────────── -->
+<div class="body">
+
+  <!-- SUMMARY -->
+  <div class="summary-box">
+    <div class="summary-icon">📊</div>
+    <div>
+      <div class="summary-headline">Executive Summary</div>
+      <div class="summary-text">
+        Weller Recreation holds a <span class="hl">very strong reputation profile</span> — driven by named-employee trust, a low-pressure sales experience, and consistent praise for being easy, honest, and worth the drive. Customers don't describe this store as transactional; they describe it as a place staffed by people they want to work with again.
+        The primary risk is a <span class="hl-red">concentrated service recovery problem</span>: when repairs fail, complaints escalate beyond the job — into refund refusals, turnaround delays, and competitive pricing gaps. Fix service recovery and very little threatens this reputation.
+      </div>
+    </div>
+  </div>
+
+  <!-- RISKS + DEPARTMENTS -->
+  <div class="section-divider">Risks &amp; Department Performance</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="title-dot" style="background:var(--red)"></span>Risk Register</div>
+      <div class="risk-item">
+        <div class="risk-indicator"><div class="risk-pip red"></div><div class="risk-line"></div></div>
+        <div><div class="risk-tag tag-critical">Critical</div><div class="risk-title">Service recovery failures</div><div class="risk-desc">Repairs not fixed, refund refusals, slower turnaround and higher pricing than local competitors. Creates "betrayal-style" reviews — the #1 threat in this dataset.</div></div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-indicator"><div class="risk-pip amber"></div><div class="risk-line"></div></div>
+        <div><div class="risk-tag tag-high">High</div><div class="risk-title">Sales / F&amp;I trust complaint</div><div class="risk-desc">One severe fairness complaint with inflammatory language. Not systemic, but reputation-toxic even as a single review. Leadership should audit the close and contract process.</div></div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-indicator"><div class="risk-pip gray"></div></div>
+        <div><div class="risk-tag tag-minor">Minor</div><div class="risk-title">Convenience friction</div><div class="risk-desc">Saturday hours and inventory accuracy complaints appear occasionally — too sparse to elevate as major operational issues.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="title-dot" style="background:var(--teal)"></span>Department Ratings</div>
+      <div class="dept-row"><div class="dept-name">Parts</div><div class="dept-bar-bg"><div class="dept-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--teal-d),var(--teal))"></div></div><div class="dept-stars">5.00</div><span class="neg-badge neg-ok">0 neg</span></div>
+      <div class="dept-row"><div class="dept-name">Accessories</div><div class="dept-bar-bg"><div class="dept-bar-fill" style="width:100%;background:linear-gradient(90deg,var(--teal-d),var(--teal))"></div></div><div class="dept-stars">5.00</div><span class="neg-badge neg-ok">0 neg</span></div>
+      <div class="dept-row"><div class="dept-name">General</div><div class="dept-bar-bg"><div class="dept-bar-fill" style="width:98.4%;background:linear-gradient(90deg,var(--teal-d),var(--teal))"></div></div><div class="dept-stars">4.93</div><span class="neg-badge neg-ok">1 neg</span></div>
+      <div class="dept-row"><div class="dept-name">Sales</div><div class="dept-bar-bg"><div class="dept-bar-fill" style="width:97.9%;background:linear-gradient(90deg,#007a6a,var(--teal-d))"></div></div><div class="dept-stars">4.92</div><span class="neg-badge neg-ok">2 neg</span></div>
+      <div class="dept-row"><div class="dept-name">F&amp;I</div><div class="dept-bar-bg"><div class="dept-bar-fill" style="width:95.5%;background:linear-gradient(90deg,#b45309,var(--amber))"></div></div><div class="dept-stars">4.82</div><span class="neg-badge neg-mid">1 neg</span></div>
+      <div class="dept-row"><div class="dept-name danger">Service ⚠</div><div class="dept-bar-bg"><div class="dept-bar-fill" style="width:91.8%;background:linear-gradient(90deg,#be123c,var(--red))"></div></div><div class="dept-stars danger">4.67</div><span class="neg-badge neg-bad">4 neg</span></div>
+    </div>
+  </div>
+
+  <!-- TREND CHARTS -->
+  <div class="section-divider">Trend Analysis</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="title-dot" style="background:var(--teal)"></span>Avg Star Rating by Quarter</div>
+      <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="title-dot" style="background:var(--navy)"></span>Review Volume by Quarter</div>
+      <div class="chart-wrap"><canvas id="volChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- PEOPLE + VOICE -->
+  <div class="section-divider">People &amp; Customer Voice</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="title-dot" style="background:var(--teal)"></span>Employee Recognition</div>
+      <div class="emp-grid">
+        <div class="emp-row"><div class="emp-avatar av-elite">T</div><div style="flex:1;min-width:0"><div class="emp-name">Troy</div><div class="emp-meta">Sales · General</div><span class="emp-tier tier-elite">Elite Ambassador</span></div><div class="emp-count">83</div></div>
+        <div class="emp-row"><div class="emp-avatar av-elite">A</div><div style="flex:1;min-width:0"><div class="emp-name">Amy</div><div class="emp-meta">Sales · F&amp;I</div><span class="emp-tier tier-elite">Elite Ambassador</span></div><div class="emp-count">78</div></div>
+        <div class="emp-row"><div class="emp-avatar av-elite">N</div><div style="flex:1;min-width:0"><div class="emp-name">Nate / Nathan</div><div class="emp-meta">Sales · General</div><span class="emp-tier tier-elite">Elite Ambassador</span></div><div class="emp-count">50</div></div>
+        <div class="emp-row"><div class="emp-avatar av-elite">B</div><div style="flex:1;min-width:0"><div class="emp-name">Brailey</div><div class="emp-meta">Sales · General</div><span class="emp-tier tier-elite">Elite Ambassador</span></div><div class="emp-count">38</div></div>
+        <div class="emp-row"><div class="emp-avatar av-high">R</div><div style="flex:1;min-width:0"><div class="emp-name">Rex</div><div class="emp-meta">Sales · Service</div><span class="emp-tier tier-high">High Performer</span></div><div class="emp-count">12</div></div>
+        <div class="emp-row"><div class="emp-avatar av-high">R</div><div style="flex:1;min-width:0"><div class="emp-name">Rich / Richard</div><div class="emp-meta">Sales · Service</div><span class="emp-tier tier-high">High Performer</span></div><div class="emp-count">9</div></div>
+        <div class="emp-row"><div class="emp-avatar av-high">T</div><div style="flex:1;min-width:0"><div class="emp-name">Trevor</div><div class="emp-meta">Sales · Service · Parts</div><span class="emp-tier tier-high">High Performer</span></div><div class="emp-count">8</div></div>
+        <div class="emp-row"><div class="emp-avatar av-reliable">B</div><div style="flex:1;min-width:0"><div class="emp-name">Bailey</div><div class="emp-meta">Sales · F&amp;I</div><span class="emp-tier tier-reliable">Reliable Contributor</span></div><div class="emp-count">5</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-top:10px">Numbers = customer mentions · All positive sentiment</div>
+    </div>
+
+    <div class="col-stack">
+      <div class="card">
+        <div class="card-title"><span class="title-dot" style="background:var(--teal)"></span>Customer Voice</div>
+        <div class="chip-wrap">
+          <span class="chip">"made it easy"</span><span class="chip">"worth the drive"</span>
+          <span class="chip">"no pressure"</span><span class="chip">"fixed my sled same day"</span>
+          <span class="chip">"great people"</span><span class="chip">"highly recommend"</span>
+          <span class="chip">"quick and smooth"</span>
+        </div>
+        <div class="sentiment-section">
+          <div class="sentiment-label">Overall sentiment — 257 reviews</div>
+          <div class="sentiment-track"><div class="sentiment-pos" style="width:97.3%"></div></div>
+          <div class="sentiment-legend">
+            <span class="sl"><span class="sl-dot" style="background:var(--teal)"></span>97.3% positive (250)</span>
+            <span class="sl"><span class="sl-dot" style="background:var(--red)"></span>2.7% negative (7)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="title-dot" style="background:var(--amber)"></span>OEM / Brand Signal</div>
+        <div class="brand-row"><div class="brand-dot" style="background:var(--green)"></div><div class="brand-name-col">Ski-Doo</div><div class="brand-mentions">5 mentions</div><div class="brand-stars-col" style="color:var(--green)">5.00★</div><div class="brand-read">Strong purchase &amp; setup experience</div></div>
+        <div class="brand-row"><div class="brand-dot" style="background:var(--green)"></div><div class="brand-name-col">Can-Am</div><div class="brand-mentions">3 mentions</div><div class="brand-stars-col" style="color:var(--green)">5.00★</div><div class="brand-read">Strong pricing &amp; buying sentiment</div></div>
+        <div class="brand-row"><div class="brand-dot" style="background:var(--green)"></div><div class="brand-name-col">Yamaha</div><div class="brand-mentions">2 mentions</div><div class="brand-stars-col" style="color:var(--green)">5.00★</div><div class="brand-read">Positive sales &amp; F&amp;I support</div></div>
+        <div class="brand-row"><div class="brand-dot" style="background:var(--amber)"></div><div class="brand-name-col">Polaris</div><div class="brand-mentions">6 mentions</div><div class="brand-stars-col" style="color:var(--amber)">4.33★</div><div class="brand-read">Mixed — service failure drags score</div></div>
+        <div class="brand-row"><div class="brand-dot" style="background:var(--red)"></div><div class="brand-name-col">Sea-Doo</div><div class="brand-mentions">1 mention</div><div class="brand-stars-col" style="color:var(--red)">1.00★</div><div class="brand-read">Isolated — quote &amp; lead time complaint</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTION PLAN -->
+  <div class="section-divider">Priority Action Plan</div>
+  <div class="grid-2" style="margin-bottom:1.75rem">
+    <div class="card">
+      <div class="card-title"><span class="title-dot" style="background:var(--red)"></span>Service &amp; F&amp;I — Critical &amp; High Priority</div>
+      <div class="action-item"><div class="action-num num-red">1</div><div><div class="action-text">Implement a 48-hour comeback / rework protocol for all disputed repairs</div><div class="action-owner">Service Manager · Critical</div></div></div>
+      <div class="action-item"><div class="action-num num-red">2</div><div><div class="action-text">Give service advisors limited refund / goodwill authority to resolve issues before they go public</div><div class="action-owner">Service Manager · Critical</div></div></div>
+      <div class="action-item"><div class="action-num num-red">3</div><div><div class="action-text">Run a competitive quote and lead-time check against key local competitors on major repair jobs</div><div class="action-owner">Service Manager · Critical</div></div></div>
+      <div class="action-item"><div class="action-num num-amber">4</div><div><div class="action-text">Tighten expectation-setting and contract clarity in F&amp;I, especially around pricing discussions</div><div class="action-owner">F&amp;I Manager · High</div></div></div>
+      <div class="action-item"><div class="action-num num-amber">5</div><div><div class="action-text">Review any process where customers could feel treated differently based on payment method or personal factors</div><div class="action-owner">F&amp;I Manager · High</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="title-dot" style="background:var(--teal)"></span>Sales, Marketing &amp; HR — High &amp; Medium Priority</div>
+      <div class="action-item"><div class="action-num num-amber">1</div><div><div class="action-text">Codify what Troy, Amy, Nate, and Brailey do so the formula scales beyond a few names</div><div class="action-owner">Sales Manager · High</div></div></div>
+      <div class="action-item"><div class="action-num num-amber">2</div><div><div class="action-text">Audit website inventory accuracy weekly to avoid wasted-drive complaints</div><div class="action-owner">Sales Manager · High</div></div></div>
+      <div class="action-item"><div class="action-num num-teal">3</div><div><div class="action-text">Use real customer language in ads and web copy: "made it easy," "worth the drive," "no pressure"</div><div class="action-owner">Marketing / CRM · Medium</div></div></div>
+      <div class="action-item"><div class="action-num num-teal">4</div><div><div class="action-text">Actively ask more service customers for reviews to dilute occasional negatives with positive volume</div><div class="action-owner">Marketing / CRM · Medium</div></div></div>
+      <div class="action-item"><div class="action-num num-teal">5</div><div><div class="action-text">Use Elite Ambassadors as the behavioral benchmark in all customer-facing training programs</div><div class="action-owner">HR / Training · Medium</div></div></div>
+    </div>
+  </div>
+
+  <!-- FULL REPORT COLLAPSIBLE -->
+  <div class="section-divider">Full Report</div>
+  <button class="report-toggle" onclick="toggleReport()" aria-expanded="false" aria-controls="fullReport">
+    <span class="report-toggle-left">
+      <span class="report-toggle-icon">📄</span>
+      <span>
+        <span class="report-toggle-title">Full Reputation Report</span>
+        <span class="report-toggle-sub">Complete findings, analysis, and recommendations — click to expand</span>
+      </span>
+    </span>
+    <span class="report-toggle-chevron">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+  </button>
+
+  <div id="fullReport" class="report-body" hidden>
+    <div class="report-section">
+      <div class="report-section-title">Executive Summary</div>
+      <p>This is a <strong>very strong reputation profile</strong> overall: 257 reviews, 4.89 average stars, 95.7% 5-star, and 97.3% positive. Review volume accelerated meaningfully, rising from 85 reviews in 2024 to 150 in 2025 while average rating improved from 4.84 to 4.93.</p>
+      <p>The dealership's reputation is driven by named-employee trust, a low-pressure sales experience, and repeated praise for being easy, friendly, helpful, and worth the drive. The strongest recurring commercial asset: customers describe this store as easy, honest, quick, and staffed by people they want to work with again.</p>
+      <p>The main operational risk is a <strong>concentrated service recovery problem</strong>. When service fails, complaints escalate beyond the repair — into poor recovery, refund refusal, slower turnaround, or being less competitive than local alternatives.</p>
+      <p>A second, lower-frequency but higher-severity risk is a <strong>sales/F&I trust complaint</strong> tied to fairness perception. It appears only once, but uses highly inflammatory language and is reputation-toxic even as a single review.</p>
+    </div>
+
+    <div class="report-section">
+      <div class="report-section-title">Overall Dealership Metrics</div>
+      <table class="report-table">
+        <thead><tr><th>Metric</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Total reviews</td><td>257</td></tr>
+          <tr><td>Average star rating</td><td>4.89</td></tr>
+          <tr><td>5-star reviews</td><td>246 (95.7%)</td></tr>
+          <tr><td>Positive reviews (4–5 star)</td><td>250 (97.3%)</td></tr>
+          <tr><td>Neutral reviews (3 star)</td><td>1</td></tr>
+          <tr><td>Negative reviews (1–2 star)</td><td>6</td></tr>
+          <tr><td>Owner-response coverage</td><td>256 / 257 (99.6%)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <div class="report-section-title">What Customers Consistently Praise</div>
+      <ul class="report-list">
+        <li>Easy, low-friction buying process</li>
+        <li>Named employees who build trust</li>
+        <li>Friendly, helpful, knowledgeable staff</li>
+        <li>Worth-the-drive regional loyalty</li>
+        <li>Strong parts/service save-the-day moments</li>
+      </ul>
+      <p style="margin-top:.75rem">Representative language: "making it easy" · "fixed my sled same day" · "worth the drive" · "no pressure" · "highly recommend"</p>
+    </div>
+
+    <div class="report-section">
+      <div class="report-section-title">Department-by-Department Analysis</div>
+      <p style="margin-bottom:1rem;font-size:12px;color:var(--text3)">Note: department tagging is text-based and multi-label, so counts exceed total reviews.</p>
+      <table class="report-table">
+        <thead><tr><th>Department</th><th>Reviews</th><th>Avg Stars</th><th>Positive %</th><th>Negatives</th><th>Signal</th></tr></thead>
+        <tbody>
+          <tr><td>Sales</td><td>96</td><td>4.92</td><td>97.9%</td><td>2</td><td>Major reputation engine. Ease, pricing, helpfulness, and named staff praised repeatedly.</td></tr>
+          <tr><td>Service</td><td>49</td><td>4.67</td><td>91.8%</td><td>4</td><td>Biggest risk area. Strong overall but nearly all repeated negative signal sits here.</td></tr>
+          <tr><td>Parts</td><td>15</td><td>5.00</td><td>100%</td><td>0</td><td>Small sample, excellent signal. Helpful, stocked, problem-solving support.</td></tr>
+          <tr><td>Accessories &amp; Gear</td><td>11</td><td>5.00</td><td>100%</td><td>0</td><td>Small but perfect sample. Good add-on/support experience.</td></tr>
+          <tr><td>F&amp;I</td><td>22</td><td>4.82</td><td>95.5%</td><td>1</td><td>Generally strong, praised for smooth paperwork — but one severe trust complaint matters.</td></tr>
+          <tr><td>Full dealership / general</td><td>128</td><td>4.93</td><td>98.4%</td><td>1</td><td>Broad store-level goodwill is extremely strong.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <div class="report-section-title">Individual Performance Analysis</div>
+      <table class="report-table">
+        <thead><tr><th>Employee</th><th>Mentions</th><th>Sentiment</th><th>Department(s)</th><th>Category</th><th>Read</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Troy</strong></td><td>83</td><td>All positive</td><td>Sales / General</td><td>Elite Ambassador</td><td>One of the biggest reputation drivers. Repeatedly tied to easy, smooth, helpful buying.</td></tr>
+          <tr><td><strong>Amy</strong></td><td>78</td><td>All positive</td><td>Sales / F&amp;I</td><td>Elite Ambassador</td><td>Major closer/trust-builder. Linked to paperwork, support, friendliness, responsiveness.</td></tr>
+          <tr><td><strong>Nate / Nathan</strong></td><td>50</td><td>All positive</td><td>Sales / General</td><td>Elite Ambassador</td><td>Strong product/helpfulness signal. Associated with honesty and ease of purchase.</td></tr>
+          <tr><td><strong>Brailey</strong></td><td>38</td><td>All positive</td><td>Sales / General</td><td>Elite Ambassador</td><td>Repeatedly praised alongside Troy; strong consistency and relationship value.</td></tr>
+          <tr><td><strong>Rex</strong></td><td>12</td><td>All positive</td><td>Sales / Service</td><td>High Performer</td><td>Helpful, supportive, often tied to setup/accessories.</td></tr>
+          <tr><td><strong>Rich / Richard</strong></td><td>9</td><td>All positive</td><td>Sales / Service</td><td>High Performer</td><td>Trusted long-term presence; loyalty signal.</td></tr>
+          <tr><td><strong>Trevor</strong></td><td>8</td><td>All positive</td><td>Sales / Service / Parts</td><td>High Performer</td><td>Helpful handoff/support role across the journey.</td></tr>
+          <tr><td><strong>Bailey</strong></td><td>5</td><td>All positive</td><td>Sales / F&amp;I</td><td>Reliable Contributor</td><td>Smooth, hassle-free finance/purchase support.</td></tr>
+          <tr><td><strong>Alden</strong></td><td>2</td><td>Mixed</td><td>Tour / General</td><td>Needs Coaching</td><td>One positive, one complaint tied to end-of-trip charges. Watch expectation-setting.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:1rem;font-size:12px;color:var(--text2)"><strong>Single-mention notes:</strong> Positive one-offs: Eduardo, Sam, Max, Paul, Tracy, Darren. Negative flags: Matt Wright, Benjamin Louder — sparse but appear inside a severe service complaint.</p>
+    </div>
+
+    <div class="report-section">
+      <div class="report-section-title">OEM / Brand Analysis</div>
+      <table class="report-table">
+        <thead><tr><th>Brand</th><th>Mentions</th><th>Avg Stars</th><th>Read</th></tr></thead>
+        <tbody>
+          <tr><td>Polaris</td><td>6</td><td>4.33</td><td>Mixed. Strong sales/parts support on Ranger reviews, but one sharp service failure drags the score.</td></tr>
+          <tr><td>Ski-Doo</td><td>5</td><td>5.00</td><td>Strong. Positive purchase and setup experience.</td></tr>
+          <tr><td>Can-Am</td><td>3</td><td>5.00</td><td>Strong. Good pricing and buying-process sentiment.</td></tr>
+          <tr><td>Yamaha</td><td>2</td><td>5.00</td><td>Positive. Sales/F&I support looks strong.</td></tr>
+          <tr><td>Sea-Doo</td><td>1</td><td>1.00</td><td>Isolated but negative. Complaint focused on quote competitiveness and repair lead time.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="report-section">
+      <div class="report-section-title">Quarterly Trend Analysis</div>
+      <table class="report-table">
+        <thead><tr><th>Quarter</th><th>Reviews</th><th>Avg Stars</th><th>5-Star %</th><th>Negatives</th></tr></thead>
+        <tbody>
+          <tr><td>2024 Q1</td><td>25</td><td>4.88</td><td>96.0%</td><td>1</td></tr>
+          <tr><td>2024 Q2</td><td>21</td><td>4.67</td><td>85.7%</td><td>1</td></tr>
+          <tr><td>2024 Q3</td><td>21</td><td>5.00</td><td>100.0%</td><td>0</td></tr>
+          <tr><td>2024 Q4</td><td>18</td><td>4.78</td><td>94.4%</td><td>1</td></tr>
+          <tr><td>2025 Q1</td><td>22</td><td>5.00</td><td>100.0%</td><td>0</td></tr>
+          <tr><td>2025 Q2</td><td>21</td><td>4.95</td><td>95.2%</td><td>0</td></tr>
+          <tr><td>2025 Q3</td><td>49</td><td>4.98</td><td>98.0%</td><td>0</td></tr>
+          <tr><td>2025 Q4</td><td>58</td><td>4.84</td><td>94.8%</td><td>2</td></tr>
+          <tr><td>2026 Q1*</td><td>22</td><td>4.82</td><td>95.5%</td><td>1</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:.75rem;font-size:12px;color:var(--text3)">*Partial quarter through March 11, 2026. 2025 Q4 softening is explained by a few concentrated service/F&I problems — not a weakening core experience.</p>
+    </div>
+
+    <div class="report-section">
+      <div class="report-section-title">Recommended Action Plan</div>
+      <div class="report-subsection-title">GM</div>
+      <ul class="report-list">
+        <li>Treat this as a high-performing store with a concentrated service-risk issue, not a broken store.</li>
+        <li>Personally review every 1–2 star review from service and F&I with root-cause notes.</li>
+      </ul>
+      <div class="report-subsection-title">Service Manager</div>
+      <ul class="report-list">
+        <li>Implement a 48-hour comeback / rework protocol for disputed repairs.</li>
+        <li>Give advisors limited refund / goodwill authority so bad recoveries do not become public reputation events.</li>
+        <li>Create a competitive quote and lead-time check against key local competitors on major repair jobs.</li>
+      </ul>
+      <div class="report-subsection-title">Sales Manager</div>
+      <ul class="report-list">
+        <li>Protect the store's strongest asset: easy, no-pressure, high-trust selling.</li>
+        <li>Codify what top performers are already doing so it scales beyond a few names.</li>
+        <li>Audit website/inventory accuracy weekly to avoid wasted-drive complaints.</li>
+      </ul>
+      <div class="report-subsection-title">F&amp;I Manager</div>
+      <ul class="report-list">
+        <li>Tighten expectation-setting and contract clarity, especially around pricing discussions.</li>
+        <li>Review any process that could make customers feel treated differently based on payment method or personal factors.</li>
+      </ul>
+      <div class="report-subsection-title">Marketing / CRM</div>
+      <ul class="report-list">
+        <li>Use real customer language in ads and website copy: "made it easy," "worth the drive," "no pressure," "great people," "highly recommend."</li>
+        <li>Ask more service customers for reviews. The public story is currently sales-led; positive service volume dilutes occasional service damage.</li>
+      </ul>
+      <div class="report-subsection-title">HR / Training</div>
+      <ul class="report-list">
+        <li>Use Troy, Amy, Nate/Nathan, and Brailey as the behavioral benchmark for customer handling.</li>
+        <li>Coach customer-facing teams on recovery language, empathy, and closeout expectations.</li>
+      </ul>
+    </div>
+
+    <div class="report-section report-bottom-box" style="border-bottom:none">
+      <div class="report-section-title">Bottom Line</div>
+      <p>This dealership has an <strong>elite frontline reputation</strong> and a very marketable customer experience. The store's public brand is being built by a handful of highly trusted people and a consistently easy buying process. Leadership should protect and scale that formula.</p>
+      <p style="margin-top:.75rem"><strong>If you fix only one thing, fix service recovery discipline.</strong> That is the only area in this file with enough repeated negative evidence to materially threaten an otherwise excellent reputation.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<div class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <img class="footer-logo-img"
+           src="https://cdn.prod.website-files.com/68238b5d1d8b582ad3c13bea/684c2fce2658b5354c86fdbb_f4f0c66a294a55c2274a9a418ae8dbcf_Teal.svg"
+           alt="HeroHub"
+           onerror="this.outerHTML='<svg viewBox=\'0 0 160 28\' style=\'height:18px;width:auto\' xmlns=\'http://www.w3.org/2000/svg\'><text x=\'0\' y=\'22\' font-family=\'Inter,sans-serif\' font-weight=\'800\' font-size=\'20\' letter-spacing=\'-0.5\' fill=\'#00b8a0\'>HEROHUB</text><text x=\'150\' y=\'10\' font-family=\'Inter,sans-serif\' font-size=\'8\' fill=\'#00b8a0\'>®</text></svg>'">
+    </div>
+    <div class="footer-left">Weller Recreation · Kamas, Utah &nbsp;·&nbsp; Reputation Audit · Jan 2024 – Dec 2025 &nbsp;·&nbsp; CONFIDENTIAL</div>
+    <div class="footer-right">257 reviews &nbsp;·&nbsp; 4.89★ &nbsp;·&nbsp; 95.7% five-star</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function toggleReport() {
+  const btn = document.querySelector('.report-toggle');
+  const panel = document.getElementById('fullReport');
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', String(!expanded));
+  panel.hidden = expanded;
+  if (!expanded) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  const tc = '#8a96a6';
+  const gc = 'rgba(13,27,46,0.05)';
+  const mobile = window.innerWidth < 720;
+
+  new Chart(document.getElementById('trendChart'), {
+    type: 'line',
+    data: {
+      labels: ['24 Q1','24 Q2','24 Q3','24 Q4','25 Q1','25 Q2','25 Q3','25 Q4','26 Q1*'],
+      datasets: [{
+        data: [4.88, 4.67, 5.00, 4.78, 5.00, 4.95, 4.98, 4.84, 4.82],
+        borderColor: '#00b8a0',
+        backgroundColor: ctx => {
+          const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
+          g.addColorStop(0, 'rgba(0,184,160,0.15)');
+          g.addColorStop(1, 'rgba(0,184,160,0)');
+          return g;
+        },
+        borderWidth: 2.5,
+        pointRadius: mobile ? 4 : 5,
+        pointBackgroundColor: '#ffffff',
+        pointBorderColor: '#00b8a0',
+        pointBorderWidth: 2.5,
+        pointHoverRadius: 7,
+        fill: true, tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#0d1b2e', titleColor: '#8a96a6', bodyColor: '#fff', padding: 10, cornerRadius: 8, callbacks: { label: c => ' ' + c.raw.toFixed(2) + ' ★' } }
+      },
+      scales: {
+        y: { min: 4.5, max: 5.05, ticks: { color: tc, font: { size: mobile?9:10, family:'JetBrains Mono' }, stepSize: 0.1, callback: v => v.toFixed(1) }, grid: { color: gc }, border: { display: false } },
+        x: { ticks: { color: tc, font: { size: mobile?8:10 }, maxRotation: mobile?30:0, autoSkip: mobile }, grid: { display: false }, border: { display: false } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('volChart'), {
+    type: 'bar',
+    data: {
+      labels: ['24 Q1','24 Q2','24 Q3','24 Q4','25 Q1','25 Q2','25 Q3','25 Q4'],
+      datasets: [{
+        data: [25, 21, 21, 18, 22, 21, 49, 58],
+        backgroundColor: ['#b3ece5','#b3ece5','#b3ece5','#b3ece5','#5ccfc4','#5ccfc4','#00a896','#008f7c'],
+        borderRadius: 6,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#0d1b2e', titleColor: '#8a96a6', bodyColor: '#fff', padding: 10, cornerRadius: 8, callbacks: { label: c => ' ' + c.raw + ' reviews' } }
+      },
+      scales: {
+        y: { ticks: { color: tc, font: { size: mobile?9:10, family:'JetBrains Mono' }, stepSize: 10 }, grid: { color: gc }, border: { display: false } },
+        x: { ticks: { color: tc, font: { size: mobile?8:10 }, maxRotation: mobile?30:0, autoSkip: mobile }, grid: { display: false }, border: { display: false } }
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
